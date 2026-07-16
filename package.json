@@ -1,0 +1,14 @@
+{
+  "name": "cypress-pom",
+  "version": "1.0.0",
+  "description": "Cypress E2E test suite using Page Object Model (POM)",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:headless": "cypress run --headless"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "cypress": "13.13.3"
+  }
+}
