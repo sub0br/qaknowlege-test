@@ -35,16 +35,38 @@ Spec that exercises the login flow through the UI using `LoginPage`, covering th
 - Login with valid administrator credentials (redirect and home page content).
 - Logout (return to the login screen).
 
+### `cypress/pages/api/BaseApi.js`
+
+Base class with a reusable `request(method, path, body, options)` method, wrapping `cy.request` against the ServeRest API (`https://serverest.dev`). `failOnStatusCode` is disabled by default so specs can assert `response.status` explicitly, including error scenarios (`400`, `401`, `403`).
+
+### `cypress/pages/api/LoginApi.js`
+
+API Page Object for `POST /login`, extending `BaseApi`:
+
+- `login(credentials)` — sends the given `{ email, password }` payload (defaults to `{}`).
+
+### `cypress/pages/api/UsersApi.js`
+
+API Page Object for `POST /usuarios`, extending `BaseApi`:
+
+- `create(user)` — creates a user from the given payload.
+
+### `cypress/pages/api/ProductsApi.js`
+
+API Page Object for `POST /produtos`, extending `BaseApi`:
+
+- `create(product, authorization)` — creates a product, sending the given bearer token in the `Authorization` header.
+
 ### `cypress/e2e/apiLogin.cy.js`
 
-Spec that exercises the login flow directly at the API level (`POST /login`), using `cy.request` instead of the UI, covering the scenarios:
+Spec that exercises the login flow directly at the API level, following the same POM structure as `login.cy.js` but using the API Page Objects above (`LoginApi`, `UsersApi`, `ProductsApi`) instead of `cy.request` calls, covering the scenarios:
 
 - Request with blank email and password (required field messages).
 - Request with blank email.
 - Request with blank password.
 - Login with invalid credentials (`401` and error message).
 - Login with valid administrator credentials (`200`, success message and `authorization` token).
-- Unauthorized access to an admin-only route (`POST /produtos`) using a regular (non-admin) user, created on the fly with `@faker-js/faker` (`403` and error message).
+- Unauthorized access to an admin-only route (`POST /produtos`, using the `products` fixture) with a regular (non-admin) user created on the fly with `@faker-js/faker` (`403` and error message).
 
 ### `cypress/fixtures/users.json`
 
